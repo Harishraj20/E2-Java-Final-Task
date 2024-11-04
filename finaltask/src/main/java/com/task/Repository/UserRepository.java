@@ -23,10 +23,10 @@ public class UserRepository {
 
     @Transactional
     public String addUserInfo(String name, String password) {
-        boolean checkInfo = checkCredentials(name, password);
+        User existingUser = checkExistingUser(name, password);
 
-        if (checkInfo) {
-            return "User Already Exists";
+        if (existingUser != null) {
+            return "User Already Exists!";
         }
         try {
             Session session = sessionFactory.getCurrentSession();
@@ -60,19 +60,16 @@ public class UserRepository {
         String message = "Invalid Credentials... Please check username or Password!!";
 
         try {
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("userName", name));
-            criteria.add(Restrictions.eq("password", password));
-            User user = (User) criteria.uniqueResult();
+            User existingUser = checkExistingUser(name, password);
 
-            if (user != null) {
+            if (existingUser != null) {
 
-                user.setVisitCount(user.getVisitCount() + 1);
-                user.setLastLogin(LocalDateTime.now());
+                existingUser.setVisitCount(existingUser.getVisitCount() + 1);
+                existingUser.setLastLogin(LocalDateTime.now());
 
-                session.update(user);
+                session.update(existingUser);
 
-                message = "User \"" + user.getUserName() + "\" has Logged in Successfully.";
+                message = "User \"" + existingUser.getUserName() + "\" has Logged in Successfully.";
 
             }
         } catch (HibernateException e) {
@@ -82,7 +79,7 @@ public class UserRepository {
         return message;
     }
 
-    public boolean checkCredentials(String name, String password) {
+    public User checkExistingUser(String name, String password) {
         Session session = sessionFactory.getCurrentSession();
 
         try {
@@ -91,10 +88,10 @@ public class UserRepository {
             criteria.add(Restrictions.eq("password", password));
             User user = (User) criteria.uniqueResult();
 
-            return user != null;
+            return user;
         } catch (HibernateException e) {
             System.out.println("error: " + e);
-            return false;
+            return null;
         }
     }
 

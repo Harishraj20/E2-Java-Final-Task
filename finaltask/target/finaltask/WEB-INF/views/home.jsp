@@ -46,7 +46,7 @@
           id="userForm"
           class="addUserForm"
           action="/finaltask/addUser"
-          onsubmit="return validateFields()"
+          onsubmit ="return validateFields()"
           method="post"
         >
           <input type="hidden" name="customerId" id="customerId" />
@@ -57,6 +57,7 @@
               name="username"
               id="name"
               placeholder="Enter User Name"
+              maxlength="30"
             />
           </div>
           <div id="nameError" class="error"></div>
@@ -71,7 +72,7 @@
               placeholder="Enter Password"
             />
           </div>
-          <div id="ageError" class="error"></div>
+          <div id="passwordError" class="error"></div>
 
           <div class="form-elements">
             <label for="confirm-password">Confirm Password:</label>
@@ -83,6 +84,7 @@
               placeholder="Re Enter the Password"
             />
           </div>
+          <div id="confirmPasswordError" class="error"></div>
 
           <div class="form-button">
             <input class="reset-button" type="reset" value="Reset" />
@@ -120,6 +122,8 @@
               name="username"
               id="loginname"
               placeholder="Enter User Name"
+              maxlength="30"
+              
             />
           </div>
           <div id="loginNameError" class="error"></div>

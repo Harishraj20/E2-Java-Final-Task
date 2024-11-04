@@ -9,19 +9,22 @@ const username = document.querySelector("#name");
 const userPassword = document.querySelector("#userPassword");
 const confirmPassword = document.querySelector("#confirm-password");
 const nameError = document.querySelector("#nameError");
-const passwordError = document.querySelector("#ageError");
+const passwordError = document.querySelector("#passwordError");
 const resetButton = document.querySelector(".reset-button");
 const loginName = document.querySelector("#loginname");
 const loginPassword = document.querySelector("#loginPassword");
 const loginNameError = document.querySelector("#loginNameError");
 const loginPasswordError = document.querySelector("#loginPasswordError");
+const confirmPasswordError = document.querySelector("#confirmPasswordError");
 
 createUserButton.addEventListener("click", () => {
   addUserModal.style.display = "flex";
+  document.getElementById('name').focus();
 });
 
 loginUserButton.addEventListener("click", () => {
   loginUserModal.style.display = "flex";
+  document.getElementById('loginname').focus();
 });
 
 closeButtonForAdd.addEventListener("click", () => {
@@ -43,9 +46,7 @@ confirmPassword.oninput = validateConfirmPassword;
 
 function validateUsername() {
   if (!username.value.trim()) {
-    nameError.innerText = "User name cannot be empty.";
-    username.classList.add("invalid");
-    username.classList.remove("valid");
+    displayErrorMessage(nameError, username, "User name Field is Empty.");
     return false;
   } else {
     nameError.innerText = "";
@@ -57,46 +58,73 @@ function validateUsername() {
 
 function validatePassword() {
   const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  const numberRegex = /[0-9]/;
+  if (!userPassword.value.trim()) {
+    displayErrorMessage(passwordError, userPassword, "Password Field is Empty.");
+    return false;
+
+  }
 
   if (!specialCharRegex.test(userPassword.value)) {
-    passwordError.innerText =
-      "Password must contain at least one special character.";
-    userPassword.classList.add("invalid");
-    userPassword.classList.remove("valid");
-    return false;
-  }
-  if (!numberRegex.test(userPassword.value)) {
-    passwordError.innerText = "Password must contain at least one number.";
-    userPassword.classList.add("invalid");
-    userPassword.classList.remove("valid");
+    displayErrorMessage(passwordError, userPassword, "Password must contain at least one special character.");
     return false;
   }
 
   passwordError.innerText = "";
   userPassword.classList.add("valid");
+  confirmPassword.classList.add("valid");
+
   userPassword.classList.remove("invalid");
   return true;
 }
-
 function validateConfirmPassword() {
-  if (userPassword.value !== confirmPassword.value) {
-    passwordError.innerText = "Password does not match!";
-    confirmPassword.classList.add("invalid");
-    confirmPassword.classList.remove("valid");
+  if (!userPassword.value.trim()) {
+    displayErrorMessage(passwordError, confirmPassword, " Password Field is Empty.");
+
     return false;
-  } else {
+  }
+  if (!confirmPassword.value.trim()) {
+    displayErrorMessage(confirmPasswordError, confirmPassword, " Confirm Password Field is Empty.");
+
+    return false;
+  }
+  if (!userPassword.value.trim() && !confirmPassword.value.trim()) {
+    displayErrorMessage(passwordError, confirmPassword, " Password Field is Empty.");
+    displayErrorMessage(confirmPasswordError, confirmPassword, "Confirm Password Field is Empty.");
+
+    return false;
+  }
+  if (userPassword.value !== confirmPassword.value) {
+    displayErrorMessage(passwordError, confirmPassword, "Password Does not Match.");
+    return false;
+  }
+  if (!confirmPassword.value.trim()) {
+    displayErrorMessage(confirmPasswordError, confirmPassword, "Confirm Password Field is Empty.");
+    return false;
+  }
+  else {
     passwordError.innerText = "";
+    confirmPasswordError.innerText = "";
     confirmPassword.classList.add("valid");
     confirmPassword.classList.remove("invalid");
     return true;
   }
 }
 
+
+const errorMessage = document.querySelector(".error-message");
+
 function validateFields() {
   const isUsernameValid = validateUsername();
   const isPasswordValid = validatePassword();
   const isConfirmPasswordValid = validateConfirmPassword();
+
+  if (!isUsernameValid) {
+    username.focus();
+  } else if (!isPasswordValid) {
+    userPassword.focus();
+  } else if (!isConfirmPasswordValid) {
+    confirmPassword.focus();
+  }
 
   return isUsernameValid && isPasswordValid && isConfirmPasswordValid;
 }
@@ -104,7 +132,10 @@ function validateFields() {
 function resetValidation() {
   nameError.innerText = "";
   passwordError.innerText = "";
+  errorMessage.innerText = "";
+  confirmPasswordError.innerText = "";
   username.classList.remove("valid", "invalid");
+  username.focus();
   userPassword.classList.remove("valid", "invalid");
   confirmPassword.classList.remove("valid", "invalid");
 }
@@ -116,9 +147,7 @@ loginPassword.onchange = validateLoginPassword;
 
 function validateLoginUsername() {
   if (!loginName.value.trim()) {
-    loginNameError.innerText = "User name cannot be empty.";
-    loginName.classList.add("invalid");
-    loginName.classList.remove("valid");
+    displayErrorMessage(loginNameError, loginName, "User name Field is empty.");
     return false;
   } else {
     loginNameError.innerText = "";
@@ -129,31 +158,27 @@ function validateLoginUsername() {
 }
 
 function validateLoginPassword() {
-  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  const numberRegex = /[0-9]/;
-
-  if (!specialCharRegex.test(loginPassword.value)) {
-    loginPasswordError.innerText =
-      "Password must contain at least one special character.";
-    loginPassword.classList.add("invalid");
-    loginPassword.classList.remove("valid");
+  if (!loginPassword.value.trim()) {
+    displayErrorMessage(loginPasswordError, loginPassword, "Password Field is Empty.");
     return false;
+  } else {
+    loginPasswordError.innerText = "";
+    loginPassword.classList.add("valid");
+    loginPassword.classList.remove("invalid");
+    return true;
   }
-  if (!numberRegex.test(loginPassword.value)) {
-    loginPasswordError.innerText = "Password must contain at least one number.";
-    loginPassword.classList.add("invalid");
-    loginPassword.classList.remove("valid");
-    return false;
-  }
-
-  passwordError.innerText = "";
-  userPassword.classList.add("valid");
-  userPassword.classList.remove("invalid");
-  return true;
 }
 function validateLoginFields() {
   const isUsernameValid = validateLoginUsername();
   const isPasswordValid = validateLoginPassword();
+
+  if (!isUsernameValid && !isPasswordValid) {
+    loginName.focus();
+  } else if (!isUsernameValid) {
+    loginName.focus();
+  } else if (!isPasswordValid) {
+    loginPassword.focus();
+  }
 
   return isUsernameValid && isPasswordValid;
 }
@@ -162,6 +187,7 @@ function resetLoginValidation() {
   loginNameError.innerText = "";
   loginPasswordError.innerText = "";
   loginName.classList.remove("valid", "invalid");
+  loginName.focus();
   loginPassword.classList.remove("valid", "invalid");
 }
 
@@ -170,3 +196,19 @@ document.querySelector("#login-reset-button").onclick = resetLoginValidation;
 document.querySelector("#loginUserForm").onsubmit = function () {
   return validateLoginFields();
 };
+
+function displayErrorMessage(selector, inputField, message) {
+  selector.innerText = message;
+  selector.style.visibility = "visible";
+  inputField.classList.add("invalid");
+  inputField.classList.remove("valid");
+  inputField.focus();
+
+  setTimeout(() => {
+    selector.innerText = "";
+    selector.style.visibility = "hidden";
+
+    inputField.classList.remove("invalid");
+  }, 5000)
+
+}
