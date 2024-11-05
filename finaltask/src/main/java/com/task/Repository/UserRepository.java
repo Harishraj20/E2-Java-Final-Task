@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.task.Model.User;
 
 @Repository
+@Transactional
 public class UserRepository {
 
     private final SessionFactory sessionFactory;
@@ -25,7 +26,6 @@ public class UserRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    @Transactional
     public String addUserInfo(User user) {
         User existingUser = checkExistingUser(user);
 
@@ -42,7 +42,6 @@ public class UserRepository {
         }
     }
 
-    @Transactional
     public List<User> getUsers() {
         Session session = sessionFactory.openSession();
         List<User> users = null;
@@ -57,7 +56,6 @@ public class UserRepository {
         return users;
     }
 
-    @Transactional
     public String validateLogin(User user) {
         Session session = sessionFactory.getCurrentSession();
         String message = "Invalid Credentials... Please check username or Password!!";
