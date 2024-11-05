@@ -17,8 +17,8 @@ public class UserService {
         this.repo = repo;
     }
 
-    public String addUsers(String name, String password) {
-        String message = repo.addUserInfo(name, password);
+    public String addUsers(User user) {
+        String message = repo.addUserInfo(user);
 
         return message;
     }
@@ -29,9 +29,9 @@ public class UserService {
 
     }
 
-    public String verifyLogin(String name, String password) {
+    public String verifyLogin(User user) {
 
-        return repo.validateLogin(name, password);
+        return repo.validateLogin(user);
     }
 
 }

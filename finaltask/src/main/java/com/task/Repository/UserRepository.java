@@ -18,19 +18,22 @@ import com.task.Model.User;
 @Repository
 public class UserRepository {
 
+    private final SessionFactory sessionFactory;
+    
     @Autowired
-    private SessionFactory sessionFactory;
+    public UserRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Transactional
-    public String addUserInfo(String name, String password) {
-        User existingUser = checkExistingUser(name, password);
+    public String addUserInfo(User user) {
+        User existingUser = checkExistingUser(user);
 
         if (existingUser != null) {
             return "User Already Exists!";
         }
         try {
             Session session = sessionFactory.getCurrentSession();
-            User user = new User(name, password);
             session.save(user);
             return "User \"" + user.getUserName() + "\" Created Successfully!!";
         } catch (HibernateException e) {
@@ -55,12 +58,12 @@ public class UserRepository {
     }
 
     @Transactional
-    public String validateLogin(String name, String password) {
+    public String validateLogin(User user) {
         Session session = sessionFactory.getCurrentSession();
         String message = "Invalid Credentials... Please check username or Password!!";
 
         try {
-            User existingUser = checkExistingUser(name, password);
+            User existingUser = checkExistingUser(user);
 
             if (existingUser != null) {
 
@@ -79,16 +82,16 @@ public class UserRepository {
         return message;
     }
 
-    public User checkExistingUser(String name, String password) {
+    public User checkExistingUser(User user) {
         Session session = sessionFactory.getCurrentSession();
 
         try {
             Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("userName", name));
-            criteria.add(Restrictions.eq("password", password));
-            User user = (User) criteria.uniqueResult();
+            criteria.add(Restrictions.eq("userName", user.getUserName()));
+            criteria.add(Restrictions.eq("password", user.getPassword()));
+            User userInfo = (User) criteria.uniqueResult();
 
-            return user;
+            return userInfo;
         } catch (HibernateException e) {
             System.out.println("error: " + e);
             return null;

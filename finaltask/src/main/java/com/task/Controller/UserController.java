@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.task.Model.User;
@@ -15,8 +15,12 @@ import com.task.Service.UserService;
 @Controller
 public class UserController {
 
+    private final UserService service;
+    
     @Autowired
-    private UserService service;
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     public String homepage() {
@@ -25,13 +29,11 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public ModelAndView addUser(
-            @RequestParam("username") String name,
-            @RequestParam("password") String password) {
+    public ModelAndView addUser(@ModelAttribute User user) {
 
         ModelAndView mv = new ModelAndView("message");
 
-        String msg = service.addUsers(name, password);
+        String msg = service.addUsers(user);
         mv.addObject("msg", msg);
         System.out.println("Into add User");
         return mv;
@@ -48,13 +50,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ModelAndView loginUser(
-            @RequestParam("username") String name,
-            @RequestParam("loginPassword") String password) {
+    public ModelAndView loginUser(@ModelAttribute User user) {
         ModelAndView mv = new ModelAndView("message");
 
         String msg;
-        msg = service.verifyLogin(name, password);
+        msg = service.verifyLogin(user);
         mv.addObject("msg", msg);
         System.out.println("Into Login User");
         return mv;

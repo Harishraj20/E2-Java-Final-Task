@@ -14,6 +14,7 @@
       referrerpolicy="no-referrer"
     />
   </head>
+
   <body>
     <div class="holder">
       <div class="home-title" id="title">
@@ -46,7 +47,7 @@
           id="userForm"
           class="addUserForm"
           action="/finaltask/addUser"
-          onsubmit ="return validateFields()"
+          onsubmit="return validateFields()"
           method="post"
         >
           <input type="hidden" name="customerId" id="customerId" />
@@ -54,7 +55,7 @@
             <label for="name">User Name:</label>
             <input
               type="text"
-              name="username"
+              name="userName"
               id="name"
               placeholder="Enter User Name"
               maxlength="30"
@@ -119,11 +120,10 @@
             <label for="loginname">User Name:</label>
             <input
               type="text"
-              name="username"
+              name="userName"
               id="loginname"
               placeholder="Enter User Name"
               maxlength="30"
-              
             />
           </div>
           <div id="loginNameError" class="error"></div>
@@ -132,7 +132,7 @@
             <label for="loginPassword">Password:</label>
             <input
               type="password"
-              name="loginPassword"
+              name="password"
               id="loginPassword"
               class="password"
               placeholder="Enter Password"

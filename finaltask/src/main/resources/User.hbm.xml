@@ -9,9 +9,5 @@
         <property name="password" column="password" />
         <property name="visitCount" column="visitCount" />
         <property name="lastLogin" column="lastLogin" />
-
-
     </class>
-
-
 </hibernate-mapping>
