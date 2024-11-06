@@ -20,7 +20,7 @@ import com.task.Model.User;
 public class UserRepository {
 
     private final SessionFactory sessionFactory;
-    
+
     @Autowired
     public UserRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -28,22 +28,23 @@ public class UserRepository {
 
     public String addUserInfo(User user) {
         User existingUser = checkExistingUser(user);
-
-        if (existingUser != null) {
-            return "User Already Exists!";
-        }
         try {
-            Session session = sessionFactory.getCurrentSession();
-            session.save(user);
-            return "User \"" + user.getUserName() + "\" Created Successfully!!";
-        } catch (HibernateException e) {
-            System.out.println(e);
-            return "Corrupted";
+            if (existingUser != null) {
+                return "User Already Exists!";
+            } else {
+                Session session = sessionFactory.getCurrentSession();
+                session.save(user);
+                return "User \"" + user.getUserName() + "\" Created Successfully!!";
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+
         }
+        return "Corrupted";
     }
 
     public List<User> getUsers() {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         List<User> users = null;
 
         try {
@@ -82,7 +83,6 @@ public class UserRepository {
 
     public User checkExistingUser(User user) {
         Session session = sessionFactory.getCurrentSession();
-
         try {
             Criteria criteria = session.createCriteria(User.class);
             criteria.add(Restrictions.eq("userName", user.getUserName()));

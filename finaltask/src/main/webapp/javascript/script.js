@@ -67,6 +67,7 @@ function validatePassword() {
       userPassword,
       "Password must contain at least one special character."
     );
+    console.log("Im here");
     return false;
   }
   passwordError.innerText = "";
@@ -76,33 +77,23 @@ function validatePassword() {
   return true;
 }
 function validateConfirmPassword() {
-  if (!userPassword.value.trim() && !confirmPassword.value.trim()) {
-    displayErrorMessage(
-      passwordError,
-      userPassword,
-      "Password Field is Empty."
-    );
-    displayErrorMessage(
-      confirmPasswordError,
-      confirmPassword,
-      "Confirm Password Field is Empty."
-    );
-    return false;
-  }
-  if (!userPassword.value.trim()) {
-    displayErrorMessage(
-      passwordError,
-      userPassword,
-      "Password Field is Empty."
-    );
-    return false;
-  }
-  if (!confirmPassword.value.trim()) {
-    displayErrorMessage(
-      confirmPasswordError,
-      confirmPassword,
-      "Confirm Password Field is Empty."
-    );
+  if (!userPassword.value.trim() || !confirmPassword.value.trim()) {
+
+    if(!userPassword.value.trim()){
+      displayErrorMessage(
+        passwordError,
+        userPassword,
+        "Password Field is Empty."
+      );
+
+    }
+    if(!confirmPassword.value.trim()){
+      displayErrorMessage(
+        confirmPasswordError,
+        confirmPassword,
+        "Confirm Password Field is Empty."
+      );
+    }
     return false;
   }
   if (userPassword.value !== confirmPassword.value) {
@@ -113,8 +104,7 @@ function validateConfirmPassword() {
     );
     return false;
   }
-  passwordError.innerText = "";
-  confirmPasswordError.innerText = "";
+ confirmPasswordError.innerText = "";
   confirmPassword.classList.add("valid");
   confirmPassword.classList.remove("invalid");
   return true;
