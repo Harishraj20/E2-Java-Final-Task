@@ -79,7 +79,7 @@ function validatePassword() {
 function validateConfirmPassword() {
   if (!userPassword.value.trim() || !confirmPassword.value.trim()) {
 
-    if(!userPassword.value.trim()){
+    if (!userPassword.value.trim()) {
       displayErrorMessage(
         passwordError,
         userPassword,
@@ -87,7 +87,7 @@ function validateConfirmPassword() {
       );
 
     }
-    if(!confirmPassword.value.trim()){
+    if (!confirmPassword.value.trim()) {
       displayErrorMessage(
         confirmPasswordError,
         confirmPassword,
@@ -104,7 +104,7 @@ function validateConfirmPassword() {
     );
     return false;
   }
- confirmPasswordError.innerText = "";
+  confirmPasswordError.innerText = "";
   confirmPassword.classList.add("valid");
   confirmPassword.classList.remove("invalid");
   return true;

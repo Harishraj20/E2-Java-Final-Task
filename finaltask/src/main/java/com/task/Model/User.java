@@ -65,4 +65,11 @@ public class User {
         return lastLogin.format(formatter);
 
     }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", visitCount=" + visitCount
+                + ", lastLogin=" + lastLogin + "]";
+    }
+    
 }

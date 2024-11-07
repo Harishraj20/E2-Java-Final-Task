@@ -27,8 +27,8 @@ public class UserRepository {
     }
 
     public String addUserInfo(User user) {
-        User existingUser = checkExistingUser(user);
         try {
+            User existingUser = checkExistingUser(user);
             if (existingUser != null) {
                 return "User Already Exists!";
             } else {
@@ -36,11 +36,14 @@ public class UserRepository {
                 session.save(user);
                 return "User \"" + user.getUserName() + "\" Created Successfully!!";
             }
-        } catch (Exception ex) {
-            System.out.println(ex);
-
+        } catch (HibernateException e) {
+            System.out.println(e);
+            return "Corrupted";
+        } catch (Exception e) {
+            System.out.println("General error: " + e);
+            return "GeneralException";
         }
-        return "Corrupted";
+
     }
 
     public List<User> getUsers() {
@@ -76,6 +79,7 @@ public class UserRepository {
             }
         } catch (HibernateException e) {
             System.out.println(e);
+            return "Corrupted";
         }
 
         return message;
@@ -91,9 +95,11 @@ public class UserRepository {
 
             return userInfo;
         } catch (HibernateException e) {
-            System.out.println("error: " + e);
+            System.out.println("Hibernate error: " + e);
+            return null;
+        } catch (Exception e) {
+            System.out.println("General error: " + e);
             return null;
         }
     }
-
 }
